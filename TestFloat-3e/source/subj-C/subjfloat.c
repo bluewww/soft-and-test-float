@@ -484,6 +484,217 @@ bool subj_f64_lt( float64_t a, float64_t b )
 /*----------------------------------------------------------------------------
 *----------------------------------------------------------------------------*/
 
+#ifdef FLOAT16
+/* float16 is a PULP compiler small float type */
+
+union f16_d { float16_t f16; float16 d; };
+
+float16_t subj_ui32_to_f16( uint32_t a )
+{
+    union f16_d uZ;
+
+    uZ.d = a;
+    return uZ.f16;
+
+}
+
+float16_t subj_ui16_to_f16( uint16_t a )
+{
+    union f16_d uZ;
+
+    uZ.d = a;
+    return uZ.f16;
+
+}
+
+float16_t subj_i32_to_f16( int32_t a )
+{
+    union f16_d uZ;
+
+    uZ.d = a;
+    return uZ.f16;
+
+}
+
+float16_t subj_i16_to_f16( int16_t a )
+{
+    union f16_d uZ;
+
+    uZ.d = a;
+    return uZ.f16;
+
+}
+
+float16_t subj_f32_to_f16( float32_t a )
+{
+    union f32_f uA;
+    union f16_d uZ;
+
+    uA.f32 = a;
+    uZ.d = uA.f;
+    return uZ.f16;
+
+}
+
+uint_fast32_t subj_f16_to_ui32_rx_minMag( float16_t a )
+{
+    union f16_d uA;
+
+    uA.f16 = a;
+    return (uint32_t) uA.d;
+
+}
+
+uint_fast16_t subj_f16_to_ui16_rx_minMag( float16_t a )
+{
+    union f16_d uA;
+
+    uA.f16 = a;
+    return (uint16_t) uA.d;
+
+}
+
+int_fast32_t subj_f16_to_i32_rx_minMag( float16_t a )
+{
+    union f16_d uA;
+
+    uA.f16 = a;
+    return (int32_t) uA.d;
+
+}
+
+int_fast16_t subj_f16_to_i16_rx_minMag( float16_t a )
+{
+    union f16_d uA;
+
+    uA.f16 = a;
+    return (int16_t) uA.d;
+
+}
+
+float32_t subj_f16_to_f32( float16_t a )
+{
+    union f16_d uA;
+    union f32_f uZ;
+
+    uA.f16 = a;
+    uZ.f = uA.d;
+    return uZ.f32;
+
+}
+
+float16_t subj_f16_add( float16_t a, float16_t b )
+{
+    union f16_d uA, uB, uZ;
+
+    uA.f16 = a;
+    uB.f16 = b;
+    uZ.d = uA.d + uB.d;
+    return uZ.f16;
+
+}
+
+float16_t subj_f16_sub( float16_t a, float16_t b )
+{
+    union f16_d uA, uB, uZ;
+
+    uA.f16 = a;
+    uB.f16 = b;
+    uZ.d = uA.d - uB.d;
+    return uZ.f16;
+
+}
+
+float16_t subj_f16_mul( float16_t a, float16_t b )
+{
+    union f16_d uA, uB, uZ;
+
+    uA.f16 = a;
+    uB.f16 = b;
+    uZ.d = uA.d * uB.d;
+    return uZ.f16;
+
+}
+
+#ifdef __STDC_VERSION__
+#if 199901L <= __STDC_VERSION__
+
+float16_t subj_f16_mulAdd( float16_t a, float16_t b, float16_t c )
+{
+    union f16_d uA, uB, uC, uZ;
+
+    uA.f16 = a;
+    uB.f16 = b;
+    uC.f16 = c;
+    /* c11 fma is only for float, double and long double */
+    uZ.d = (uA.d * uB.d) + uC.d;
+    return uZ.f16;
+
+}
+
+#endif
+#endif
+
+float16_t subj_f16_div( float16_t a, float16_t b )
+{
+    union f16_d uA, uB, uZ;
+
+    uA.f16 = a;
+    uB.f16 = b;
+    uZ.d = uA.d / uB.d;
+    return uZ.f16;
+
+}
+
+float16_t subj_f16_sqrt( float16_t a )
+{
+    union f16_d uA, uZ;
+
+    uA.f16 = a;
+    /* again c11 sqrt is only for float, double and long double. I don't know
+     * how to make the compiler infer a half float sqrt instruction, so we got
+     * through inline assembly. */
+    /* uZ.d = sqrt( uA.d ); */
+    asm volatile ("fsqrt.h %[a], %[b]\n" : [a] "=f"(uZ.d) : [b] "f"(uA.d));
+    return uZ.f16;
+
+}
+
+bool subj_f16_eq( float16_t a, float16_t b )
+{
+    union f16_d uA, uB;
+
+    uA.f16 = a;
+    uB.f16 = b;
+    return (uA.d == uB.d);
+
+}
+
+bool subj_f16_le( float16_t a, float16_t b )
+{
+    union f16_d uA, uB;
+
+    uA.f16 = a;
+    uB.f16 = b;
+    return (uA.d <= uB.d);
+
+}
+
+bool subj_f16_lt( float16_t a, float16_t b )
+{
+    union f16_d uA, uB;
+
+    uA.f16 = a;
+    uB.f16 = b;
+    return (uA.d < uB.d);
+
+}
+
+#endif
+
+/*----------------------------------------------------------------------------
+*----------------------------------------------------------------------------*/
+
 #if defined EXTFLOAT80 && defined LONG_DOUBLE_IS_EXTFLOAT80
 
 void subj_ui32_to_extF80M( uint32_t a, extFloat80_t *zPtr )

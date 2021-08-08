@@ -4,6 +4,18 @@
 | exist.
 *----------------------------------------------------------------------------*/
 
+#ifdef FLOAT16
+#define SUBJ_F16_ADD
+#define SUBJ_F16_SUB
+#define SUBJ_F16_MUL
+#define SUBJ_F16_MULADD
+#define SUBJ_F16_DIV
+#define SUBJ_F16_SQRT
+#define SUBJ_F16_EQ
+#define SUBJ_F16_LE
+#define SUBJ_F16_LT
+#endif
+
 #define SUBJ_UI32_TO_F32
 #define SUBJ_UI64_TO_F32
 #define SUBJ_I32_TO_F32
