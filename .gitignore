@@ -1,0 +1,7 @@
+*.o
+*.a
+/TestFloat-3e/build/Embedded-PULP-GCC/testfloat
+/TestFloat-3e/build/Embedded-PULP-GCC/testfloat_gen
+/TestFloat-3e/build/Embedded-PULP-GCC/testfloat_ver
+/TestFloat-3e/build/Embedded-PULP-GCC/testsoftfloat
+/TestFloat-3e/build/Embedded-PULP-GCC/timesoftfloat
